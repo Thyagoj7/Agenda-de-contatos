@@ -6,14 +6,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Dao.
+ */
 public class Dao {
-	/** Módulo de Conexão **/
+	
+	/**  Módulo de Conexão *. */
 	// Parâmetro de conexão
 	private String driver = "com.mysql.cj.jdbc.Driver";
+	
+	/** The url. */
 	private String url = "jdbc:mysql://127.0.0.1:3306/dbagenda?useTimezone=true&serverTimezone=UTC";
+	
+	/** The user. */
 	private String user = "root";
+	
+	/** The password. */
 	private String password = "230714";
 
+	/**
+	 * Conectar.
+	 *
+	 * @return the connection
+	 */
 	// Metodo de conexão
 	private Connection conectar() {
 		Connection con = null;
@@ -27,7 +43,11 @@ public class Dao {
 		}
 	}
 
-	/** CRUD CREATE **/
+	/**
+	 *  CRUD CREATE *.
+	 *
+	 * @param contato the contato
+	 */
 	public void inserirContato(JavaBeans contato) {
 		String create = "insert into contatos (nome, fone, email) values(?,?,?)";
 		try {
@@ -49,7 +69,11 @@ public class Dao {
 		}
 	}
 
-	/** CRUD READ **/
+	/**
+	 *  CRUD READ *.
+	 *
+	 * @return the array list
+	 */
 	public ArrayList<JavaBeans> listarContatos() {
 		// Criando um objeto para acessar o JavaBeans
 		ArrayList<JavaBeans> contatos = new ArrayList<>();
@@ -76,15 +100,19 @@ public class Dao {
 			return null;
 		}
 	}
-	
-	/** CRUD UPDATE **/
-	//selecionar o contato
+
+	/**
+	 *  CRUD UPDATE *.
+	 *
+	 * @param contato the contato
+	 */
+	// selecionar o contato
 	public void selecionarContato(JavaBeans contato) {
 		String read2 = "select * from contatos where idcon = ?";
 		try {
 			Connection con = conectar();
 			PreparedStatement pst = con.prepareStatement(read2);
-			pst.setString(1,  contato.getIdcon());
+			pst.setString(1, contato.getIdcon());
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
 				// setar as variaveis JB
@@ -98,13 +126,48 @@ public class Dao {
 			System.out.println(e);
 		}
 	}
-	
 
-	// teste de conexão
-	/*
-	 * public void testeConsexao() { try { Connection con = conectar();
-	 * System.out.println(con); con.close(); } catch (Exception e) {
-	 * System.out.println(e); } }
+	/**
+	 * Alterar contato.
+	 *
+	 * @param contato the contato
 	 */
+	// editar o contato
+	public void alterarContato(JavaBeans contato) {
+		String create = "update contatos set nome=?,fone=?,email=? where idcon=?";
 
+		try {
+			Connection con = conectar();
+			PreparedStatement pst = con.prepareStatement(create);
+			pst.setString(1, contato.getNome());
+			pst.setString(2, contato.getFone());
+			pst.setString(3, contato.getEmail());
+			pst.setString(4, contato.getIdcon());
+			pst.executeUpdate();
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	/**
+	 *  CRUD DELETE *.
+	 *
+	 * @param contato the contato
+	 */
+	public void deletarContato(JavaBeans contato) {
+		String delete = "delete from contatos where idcon=?";
+
+		try {
+			Connection con = conectar();
+			PreparedStatement pst = con.prepareStatement(delete);
+			pst.setString(1, contato.getIdcon());
+			pst.executeUpdate();
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+	}
 }
+
